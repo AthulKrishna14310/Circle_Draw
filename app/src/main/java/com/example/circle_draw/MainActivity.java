@@ -20,11 +20,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int RADIUS_COORDINATE_X =294 ;
+    private static final int RADIUS_COORDINATE_Y =95 ;
     private CircleDrawLayout circleDrawLayout;
     private Button           finishButton;
     private ArrayList<Integer> radiuses=new ArrayList<>();
-    private int CENTRE_X_COORDINATE=458;
-    private int CENTRE_Y_COORDINATE=346;
+    private int CENTRE_X_COORDINATE=298;
+    private int CENTRE_Y_COORDINATE=310;
     private boolean blackIndex=false;
     private boolean whiteIndex=false;
     private int bullshit=0;
@@ -57,22 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if(event.getAction()==MotionEvent.ACTION_MOVE){
-                    finishButton.setBackgroundColor(Color.RED);
-                    finishButton.setText("FINISH");
-                    if(circleDrawLayout.isOutIndex()){
-                        if(whiteIndex==false) {
-                            whiteIndex=true;
-                            blackIndex=false;
-                        }
-                        }else{
-                        if(blackIndex==false) {
-                            bullshit++;
-                            XXs.add(circleDrawLayout.getXX());
-                            YYs.add(circleDrawLayout.getYY());
-                            blackIndex=true;
-                            whiteIndex=false;
-                        }
-                    }
+                    finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
+                    XXs.add(circleDrawLayout.getXX());
+                    YYs.add(circleDrawLayout.getYY());
+
                 }
                 return false;
             }
@@ -82,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bullshit < 7) {
+             /*   if (bullshit ==0) {
                     CFAlertDialog.Builder builder = new CFAlertDialog.Builder(MainActivity.this)
                             .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
                             .setTitle("Try again")
@@ -100,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 else {
-                   review();
+  */                 review();
                    Intent intent=new Intent(MainActivity.this,ScoreActivity.class);
                    intent.putExtra("VALUE",temp);
                    intent.putExtra("TOTAL",radiuses.size());
                    startActivity(intent);
                }
-            }
+
         });
 
 
@@ -121,10 +111,13 @@ public class MainActivity extends AppCompatActivity {
                     ((YYs.get(i).intValue() - CENTRE_Y_COORDINATE)
                             * (YYs.get(i).intValue() - CENTRE_Y_COORDINATE))));
         }
-        int fixed=radiuses.get(1).intValue();
+        int fixed=(int) Math.sqrt(((RADIUS_COORDINATE_X
+                - CENTRE_X_COORDINATE) * (RADIUS_COORDINATE_X - CENTRE_X_COORDINATE)) +
+                (RADIUS_COORDINATE_Y - CENTRE_Y_COORDINATE)
+                        * (RADIUS_COORDINATE_Y - CENTRE_Y_COORDINATE));
 
         for(int i=0;i<radiuses.size();i++){
-            if(radiuses.get(i).intValue()<=(fixed+40)&&radiuses.get(i).intValue()>=(fixed-40)
+            if(radiuses.get(i).intValue()<=(fixed+20)&&radiuses.get(i).intValue()>=(fixed-20)
             ){
                 temp++;
             }

@@ -123,6 +123,8 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
                     int b = Color.blue(pixel);
 
                     total++;
+                    X=(int) event.getX();
+                    Y=(int) event.getY();
 
                     if(r==0&&g==0&&b==0){
                         outIndex=false;
@@ -130,16 +132,12 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
 
                         pixelX.add((int) event.getX());
                         pixelY.add( (int) event.getY());
-                        X=(int) event.getX();
-                        Y=(int) event.getY();
                         taps.add(0);
                     }
 
                     else if(r==255&&g==255&&b==255){
                         outIndex=true;
                         taps.add(1);
-                        X=(int) event.getX();
-                        Y=(int) event.getY();
 
                     }
                     else
