@@ -3,6 +3,7 @@ package com.example.circle_draw;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -20,13 +21,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int RADIUS_COORDINATE_X =294 ;
-    private static final int RADIUS_COORDINATE_Y =95 ;
-    private CircleDrawLayout circleDrawLayout;
+    private static int RADIUS_COORDINATE_X =294 ;
+    private static int RADIUS_COORDINATE_Y =74 ;
+    private CircleDrawLayout circleDrawLayout,circleDrawLayout2;
     private Button           finishButton;
     private ArrayList<Integer> radiuses=new ArrayList<>();
-    private int CENTRE_X_COORDINATE=298;
-    private int CENTRE_Y_COORDINATE=310;
+    private int CENTRE_X_COORDINATE=303;
+    private int CENTRE_Y_COORDINATE=296;
     private boolean blackIndex=false;
     private boolean whiteIndex=false;
     private int bullshit=0;
@@ -53,21 +54,15 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
             }
         });
+        finishButton.setText("DRAW THE SAME CIRCLE ON THE RIGHT WITH SAME RADIUS");
+
         circleDrawLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-
-                if(event.getAction()==MotionEvent.ACTION_MOVE){
-                    finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
-                    XXs.add(circleDrawLayout.getXX());
-                    YYs.add(circleDrawLayout.getYY());
-
-                }
+                finishButton.setText("CLICK HERE IF FINISHED");
                 return false;
             }
         });
-        finishButton.setText("DRAW A CIRCLE WITH RED DOT AS CENTRE");
 
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,16 +85,46 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 else {
-  */                 review();
-                   Intent intent=new Intent(MainActivity.this,ScoreActivity.class);
-                   intent.putExtra("VALUE",temp);
-                   intent.putExtra("TOTAL",radiuses.size());
-                   startActivity(intent);
-               }
+  */                  displaySecondCircle();
+            }
 
         });
 
 
+    }
+
+    private void displaySecondCircle() {
+        circleDrawLayout2=findViewById(R.id.circleDraw1);
+        circleDrawLayout2.setVisibility(View.VISIBLE);
+
+        circleDrawLayout2.setBackground(getDrawable(R.drawable.self));
+        finishButton.setText("NOW DRAW THE CIRCLE BY YOURSELF, WITH GIVEN RADIUS");
+      circleDrawLayout2.setOnTouchListener(new View.OnTouchListener() {
+          @Override
+          public boolean onTouch(View v, MotionEvent event) {
+
+              if(event.getAction()==MotionEvent.ACTION_DOWN){
+                  RADIUS_COORDINATE_X=circleDrawLayout.getXX();
+                  RADIUS_COORDINATE_Y=circleDrawLayout.getYY();
+              }
+
+              if(event.getAction()==MotionEvent.ACTION_MOVE){
+                  finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
+                  finishButton.setText("CLICK HERE IF FINISHED");
+                  XXs.add(circleDrawLayout2.getXX());
+                  YYs.add(circleDrawLayout2.getYY());
+
+              }
+              return false;
+          }
+      });
+
+      finishButton.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              review();
+          }
+      });
     }
 
     private void review() {
@@ -122,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
                 temp++;
             }
         }
+        Intent intent=new Intent(MainActivity.this,ScoreActivity.class);
+        intent.putExtra("VALUE",temp);
+        intent.putExtra("TOTAL",radiuses.size());
+        startActivity(intent);
+
 
      }
 }
