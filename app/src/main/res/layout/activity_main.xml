@@ -36,27 +36,26 @@
         android:background="@drawable/demo" />
 
     <android.support.v7.widget.CardView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@id/finishbutton"
-        android:layout_alignParentTop="false"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="10dp"
 
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="50dp"
-        app:cardElevation="10dp">
+        android:layout_marginRight="5dp"
+        >
 
         <Button
             android:id="@+id/refreshButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/colorPrimaryDark"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/colorAccent"
             android:foreground="@drawable/ic_refresh_black_24dp"
             android:textColor="@android:color/white"
-            tools:text="" />
+            tools:text=""
+            android:padding="30dp"
+            />
     </android.support.v7.widget.CardView>
 
     <Button
@@ -65,12 +64,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:background="@color/colorPrimary"
         android:text="DRAW THE SAME CIRCLE ON THE RIGHT WITH SAME RADIUS"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
-        android:textSize="22sp" />
+        android:textSize="30sp" />
 
 </RelativeLayout>

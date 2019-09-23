@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 finishButton.setText("CLICK HERE IF FINISHED");
+                if(event.getAction()==MotionEvent.ACTION_MOVE){
+                 circleDrawLayout.setBackground(getDrawable(R.drawable.draw_bg_1));
+                }else if(event.getAction()==MotionEvent.ACTION_UP){
+                  circleDrawLayout.setBackground(getDrawable(R.drawable.draw_bg));
+                }
+
                 return false;
             }
         });
@@ -99,9 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
         circleDrawLayout2.setBackground(getDrawable(R.drawable.self));
         finishButton.setText("NOW DRAW THE CIRCLE BY YOURSELF, WITH GIVEN RADIUS");
+
       circleDrawLayout2.setOnTouchListener(new View.OnTouchListener() {
           @Override
           public boolean onTouch(View v, MotionEvent event) {
+
 
               if(event.getAction()==MotionEvent.ACTION_DOWN){
                   RADIUS_COORDINATE_X=circleDrawLayout.getXX();
@@ -109,12 +117,19 @@ public class MainActivity extends AppCompatActivity {
               }
 
               if(event.getAction()==MotionEvent.ACTION_MOVE){
-                  finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
-                  finishButton.setText("CLICK HERE IF FINISHED");
+                  finishButton.setBackgroundColor(Color.parseColor("#00574B"));
+                  finishButton.setText("CONTINUE DRAWING THE CIRCLE");
                   XXs.add(circleDrawLayout2.getXX());
                   YYs.add(circleDrawLayout2.getYY());
 
               }
+              if(event.getAction()==MotionEvent.ACTION_UP){
+                  finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
+                  finishButton.setText("CLICK HERE IF FINISHED");
+
+
+              }
+
               return false;
           }
       });
@@ -122,8 +137,15 @@ public class MainActivity extends AppCompatActivity {
       finishButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              review();
-          }
+              if(circleDrawLayout2.lastr==255&&
+                      circleDrawLayout2.lastg==0&&
+                      circleDrawLayout2.lastb==255){
+                  review();
+
+              }else {
+                     showfinalDialogue(false);
+                    }
+              }
       });
     }
 
@@ -154,4 +176,41 @@ public class MainActivity extends AppCompatActivity {
 
 
      }
+
+    private void showfinalDialogue(boolean success) {
+        // Create Alert using Builder
+        if (success) {
+            CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
+                    .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
+                    .setTitle("Success. Congrats you hit the score.")
+                    .setIcon(R.drawable.ic_check_circle_black_24dp)
+                    .addButton("Try your self", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
+                            CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+
+            builder.show();
+        } else {
+            CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
+                    .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
+                    .setTitle("Please complete the circle and don't produce it outside its " +
+                            "curve.")
+                    .setIcon(R.drawable.ic_cancel_black_24dp)
+
+                    .addButton("Redo", -1, -1, CFAlertDialog.CFAlertActionStyle.NEGATIVE,
+                            CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                      dialog.dismiss();
+                                      }
+                            });
+
+            builder.show();
+
+
+        }
+    }
 }

@@ -31,6 +31,9 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
         return pixelX;
     }
 
+    public int lastr,lastg,lastb;
+
+
     public void setPixelX(ArrayList<Integer> pixelX) {
         this.pixelX = pixelX;
     }
@@ -124,6 +127,10 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
                     int g = Color.green(pixel);
                     int b = Color.blue(pixel);
 
+                    lastr=r;
+                    lastg=g;
+                    lastb=b;
+
                     total++;
                     X=(int) event.getX();
                     Y=(int) event.getY();
@@ -148,6 +155,8 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
                     path.lineTo(pointX, pointY);
                 }
                 break;
+
+
             default:
                 return false;
 

@@ -1,13 +1,17 @@
 package com.example.circle_draw;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.card.MaterialCardView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -99,7 +103,7 @@ public class FullscreenActivity extends AppCompatActivity {
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FullscreenActivity.this,MainActivity.class));
+               showIntroDialogue();
             }
         });
 
@@ -110,11 +114,31 @@ public class FullscreenActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FullscreenActivity.this,MainActivity.class));
+                showIntroDialogue();
             }
         });
     }
 
+    private void showIntroDialogue() {
+        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
+                .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
+                .setTitle("1.Draw the circle given quadrants.\n" +
+                        "2.Click above button\n" +
+                        "3.Draw circle yourself with given radius of left circle\n" +
+                        "4.Click above button to get score.")
+                .setIcon(R.drawable.ic_info_black_24dp)
+                .addButton("Ok, I understand", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
+                        CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                               startActivity(new Intent(FullscreenActivity.this,MainActivity.class));
+                            }
+                        });
+
+        builder.show();
+
+
+    }
 
 
     @Override
