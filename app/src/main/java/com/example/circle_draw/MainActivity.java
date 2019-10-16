@@ -21,13 +21,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int RADIUS_COORDINATE_X =294 ;
-    private static int RADIUS_COORDINATE_Y =74 ;
+    private static int RADIUS_COORDINATE_X =450 ;
+    private static int RADIUS_COORDINATE_Y =120 ;
     private CircleDrawLayout circleDrawLayout,circleDrawLayout2;
     private Button           finishButton;
     private ArrayList<Integer> radiuses=new ArrayList<>();
-    private int CENTRE_X_COORDINATE=303;
-    private int CENTRE_Y_COORDINATE=296;
+    private int CENTRE_X_COORDINATE=450;
+    private int CENTRE_Y_COORDINATE=450;
     private boolean blackIndex=false;
     private boolean whiteIndex=false;
     private int bullshit=0;
@@ -100,10 +100,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displaySecondCircle() {
+
         circleDrawLayout2=findViewById(R.id.circleDraw1);
         circleDrawLayout2.setVisibility(View.VISIBLE);
-
         circleDrawLayout2.setBackground(getDrawable(R.drawable.self));
+
         finishButton.setText("NOW DRAW THE CIRCLE BY YOURSELF, WITH GIVEN RADIUS");
 
       circleDrawLayout2.setOnTouchListener(new View.OnTouchListener() {
@@ -112,13 +113,11 @@ public class MainActivity extends AppCompatActivity {
 
 
               if(event.getAction()==MotionEvent.ACTION_DOWN){
-                  RADIUS_COORDINATE_X=circleDrawLayout.getXX();
-                  RADIUS_COORDINATE_Y=circleDrawLayout.getYY();
-              }
+               }
 
               if(event.getAction()==MotionEvent.ACTION_MOVE){
                   finishButton.setBackgroundColor(Color.parseColor("#00574B"));
-                  finishButton.setText("CONTINUE DRAWING THE CIRCLE");
+                  finishButton.setText("CONTINUE DRAWING THE CIRCLE "+""+circleDrawLayout2.getXX()+","+circleDrawLayout2.getYY());
                   XXs.add(circleDrawLayout2.getXX());
                   YYs.add(circleDrawLayout2.getYY());
 

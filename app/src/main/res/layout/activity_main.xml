@@ -9,30 +9,31 @@
 
     <com.example.circle_draw.CircleDrawLayout
         android:id="@+id/circleDraw"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp" />
+
     <com.example.circle_draw.CircleDrawLayout
         android:id="@+id/circleDraw1"
-        android:visibility="invisible"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageViewDemo"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/demo" />
 
     <android.support.v7.widget.CardView
