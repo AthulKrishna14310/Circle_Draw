@@ -7,8 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageView {
 
-    public ViewGroup.LayoutParams params;
+    public  ViewGroup.LayoutParams params;
     private Path path=new Path();
     private Paint brush=new Paint();
     private Bitmap bitmap;
@@ -55,7 +54,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
         super(context);
 
         brush.setAntiAlias(true);
-        brush.setColor(Color.MAGENTA);
+        brush.setColor(Color.GREEN);
         brush.setStyle(Paint.Style.STROKE);
         brush.setStrokeJoin(Paint.Join.ROUND);
         brush.setStrokeWidth(15f);
@@ -72,7 +71,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
     public CircleDrawLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         brush.setAntiAlias(true);
-        brush.setColor(Color.MAGENTA);
+        brush.setColor(Color.GREEN);
         brush.setStyle(Paint.Style.STROKE);
         brush.setStrokeJoin(Paint.Join.ROUND);
         brush.setStrokeWidth(15f);
@@ -86,7 +85,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
     public CircleDrawLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         brush.setAntiAlias(true);
-        brush.setColor(Color.MAGENTA);
+        brush.setColor(Color.GREEN);
         brush.setStyle(Paint.Style.STROKE);
         brush.setStrokeJoin(Paint.Join.ROUND);
         brush.setStrokeWidth(15f);
@@ -135,7 +134,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
                     X=(int) event.getX();
                     Y=(int) event.getY();
 
-                    if(r==0&&g==0&&b==0){
+                    if(r==255&&g==0&&b==255){
                         outIndex=false;
                         touched++;
 

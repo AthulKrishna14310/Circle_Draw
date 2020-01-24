@@ -3,13 +3,13 @@ package com.example.circle_draw;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
+
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -21,18 +21,20 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int RADIUS_COORDINATE_X =450 ;
-    private static int RADIUS_COORDINATE_Y =120 ;
+    private static int RADIUS_COORDINATE_X =455 ;
+    private static int RADIUS_COORDINATE_Y =125 ;
     private CircleDrawLayout circleDrawLayout,circleDrawLayout2;
     private Button           finishButton;
     private ArrayList<Integer> radiuses=new ArrayList<>();
-    private int CENTRE_X_COORDINATE=450;
-    private int CENTRE_Y_COORDINATE=450;
+    private int CENTRE_X_COORDINATE=455;
+    private int CENTRE_Y_COORDINATE=455;
     private boolean blackIndex=false;
     private boolean whiteIndex=false;
     private int bullshit=0;
     private int temp=0;
-    
+    private MediaPlayer ErrorMediaPlayer;
+    private String uid;
+
     private ArrayList<Integer> XXs=new ArrayList<>();
     private ArrayList<Integer> YYs=new ArrayList<>();
 
@@ -40,30 +42,87 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+
+        ErrorMediaPlayer = MediaPlayer.create(this, R.raw.error);
+        if(ErrorMediaPlayer !=null)
+        {
+            ErrorMediaPlayer.setLooping(true);
+        }
+
+
+
         circleDrawLayout=(CircleDrawLayout)findViewById(R.id.circleDraw);
         finishButton=(Button)findViewById(R.id.finishbutton);
+
+        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
+                .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
+                .setTitle("Instructions")
+                .setMessage("1.Draw the circle given quadrants.\n" +
+                        "2.Click above button\n" +
+                        "3.Draw circle yourself with given radius of left circle\n" +
+                        "4.Click above button to get score.")
+                .setIcon(R.drawable.ic_info_black_24dp)
+                .addButton("Ok, I understand", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
+                        CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.show();
+
         findViewById(R.id.refreshButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recreate();
             }
         });
+        finishButton.setBackgroundColor(Color.parseColor("#00574B"));
+
         finishButton.setText("DRAW THE SAME CIRCLE ON THE RIGHT WITH SAME RADIUS");
 
         circleDrawLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                finishButton.setText("CLICK HERE IF FINISHED");
+
+
+                if(event.getAction()==MotionEvent.ACTION_DOWN){
+                }
+
                 if(event.getAction()==MotionEvent.ACTION_MOVE){
-                 circleDrawLayout.setBackground(getDrawable(R.drawable.draw_bg_1));
-                }else if(event.getAction()==MotionEvent.ACTION_UP){
-                  circleDrawLayout.setBackground(getDrawable(R.drawable.draw_bg));
+                    circleDrawLayout.setBackground(getDrawable(R.drawable.demo));
+                    if(circleDrawLayout.isOutIndex()){
+                        finishButton.setBackgroundColor(Color.parseColor("#FF0000"));
+                        finishButton.setText("TRACED OUT ");
+
+                        if(ErrorMediaPlayer != null)
+                        {
+                            ErrorMediaPlayer.start();
+                        }
+
+                    }else{
+                        finishButton.setBackgroundColor(Color.parseColor("#00574B"));
+                        finishButton.setText("CONTINUE DRAWING THE CIRCLE "+""+circleDrawLayout.getXX()+","+circleDrawLayout.getYY());
+
+                        if(ErrorMediaPlayer != null && ErrorMediaPlayer.isPlaying())
+                        {
+                            ErrorMediaPlayer.pause();
+                        }
+                    }
+
+                }
+                if(event.getAction()==MotionEvent.ACTION_UP){
+
+                    ErrorMediaPlayer.pause();
+                    finishButton.setBackgroundColor(Color.parseColor("#D81B60"));
+                    finishButton.setText("CLICK HERE IF FINISHED");
+                    circleDrawLayout.setBackground(getDrawable(R.drawable.draw_bg));
+
+
                 }
 
                 return false;
@@ -73,30 +132,26 @@ public class MainActivity extends AppCompatActivity {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             /*   if (bullshit ==0) {
-                    CFAlertDialog.Builder builder = new CFAlertDialog.Builder(MainActivity.this)
-                            .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
-                            .setTitle("Try again")
-                            .setIcon(R.drawable.ic_cancel_black_24dp)
-                            .setTitle("Please draw slowly with pointed fingers.")
-                            .addButton("Redo", -1, -1, CFAlertDialog.CFAlertActionStyle.NEGATIVE,
-                                    CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            recreate();
-                                        }
-                                    });
-
-                    builder.show();
+                if(circleDrawLayout.lastr==0&&
+                        circleDrawLayout.lastg==255&&
+                        circleDrawLayout.lastb==0) {
+                    displaySecondCircle();
+                }else{
+                    showfinalDialogue(false);
 
                 }
-                else {
-  */                  displaySecondCircle();
             }
 
         });
 
-
+        findViewById(R.id.homeButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAffinity();
+                System.exit(0);
+            }
+        });
+        uid=getIntent().getStringExtra("UID");
     }
 
     private void displaySecondCircle() {
@@ -104,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         circleDrawLayout2=findViewById(R.id.circleDraw1);
         circleDrawLayout2.setVisibility(View.VISIBLE);
         circleDrawLayout2.setBackground(getDrawable(R.drawable.self));
+
+        finishButton.setBackgroundColor(Color.parseColor("#00574B"));
 
         finishButton.setText("NOW DRAW THE CIRCLE BY YOURSELF, WITH GIVEN RADIUS");
 
@@ -136,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
       finishButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              if(circleDrawLayout2.lastr==255&&
-                      circleDrawLayout2.lastg==0&&
-                      circleDrawLayout2.lastb==255){
+              if(circleDrawLayout2.lastr==0&&
+                      circleDrawLayout2.lastg==255&&
+                      circleDrawLayout2.lastb==0){
                   review();
 
               }else {
@@ -163,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         * (RADIUS_COORDINATE_Y - CENTRE_Y_COORDINATE));
 
         for(int i=0;i<radiuses.size();i++){
-            if(radiuses.get(i).intValue()<=(fixed+20)&&radiuses.get(i).intValue()>=(fixed-20)
+            if(radiuses.get(i).intValue()<=(fixed+25)&&radiuses.get(i).intValue()>=(fixed-25)
             ){
                 temp++;
             }
@@ -171,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(MainActivity.this,ScoreActivity.class);
         intent.putExtra("VALUE",temp);
         intent.putExtra("TOTAL",radiuses.size());
+        intent.putExtra("UID",uid);
         startActivity(intent);
 
 
@@ -212,4 +270,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
 }

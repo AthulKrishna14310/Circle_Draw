@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crowdfire.cfalertdialog.CFAlertDialog;
 
@@ -86,7 +87,7 @@ public class FullscreenActivity extends AppCompatActivity {
             return false;
         }
     };
-
+    private String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,27 +117,19 @@ public class FullscreenActivity extends AppCompatActivity {
                 showIntroDialogue();
             }
         });
+
+
+        uid=getIntent().getStringExtra("UID");
+        if(uid!=null)
+            Toast.makeText(getApplicationContext(),uid,Toast.LENGTH_SHORT).show();
+        else{
+            Toast.makeText(getApplicationContext(),"Opened Separately",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void showIntroDialogue() {
-        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
-                .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
-                .setTitle("Instructions")
-                .setMessage("1.Draw the circle given quadrants.\n" +
-                        "2.Click above button\n" +
-                        "3.Draw circle yourself with given radius of left circle\n" +
-                        "4.Click above button to get score.")
-                .setIcon(R.drawable.ic_info_black_24dp)
-                .addButton("Ok, I understand", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
-                        CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                               startActivity(new Intent(FullscreenActivity.this,MainActivity.class));
-                            }
-                        });
-
-        builder.show();
-
+        startActivity(new Intent(FullscreenActivity.this,MainActivity.class).putExtra("UID",uid));
 
     }
 

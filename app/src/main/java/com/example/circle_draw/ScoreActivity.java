@@ -1,21 +1,30 @@
 package com.example.circle_draw;
 
 import android.content.DialogInterface;
-import android.content.Intent;
+
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.crowdfire.cfalertdialog.CFAlertDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ScoreActivity extends AppCompatActivity {
     private int temp=0;
     private int total=0;
     private Button scoreButton;
     private boolean success=false;
+    private String uid;
+    float percent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +37,7 @@ public class ScoreActivity extends AppCompatActivity {
         temp=getIntent().getIntExtra("VALUE",0);
         total=getIntent().getIntExtra("TOTAL",0);
         scoreButton=findViewById(R.id.scoreButton);
-        float percent=(temp*100)/total;
+        percent=(temp*100)/total;
         scoreButton.setText(" "+percent+"/ "+"100");
 
         if(percent<50){
@@ -37,6 +46,7 @@ public class ScoreActivity extends AppCompatActivity {
             showfinalDialogue(true);
 
         }
+        uid=getIntent().getStringExtra("UID");
     }
         private void showfinalDialogue(boolean success) {
             // Create Alert using Builder
@@ -45,11 +55,46 @@ public class ScoreActivity extends AppCompatActivity {
                         .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
                         .setTitle("Success. Congrats you hit the score.")
                         .setIcon(R.drawable.ic_check_circle_black_24dp)
-                        .addButton("Try your self", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
+                        .addButton("Upload Data", -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE,
                                 CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        finish();
+                                        String date_ = "No date";
+                                        DateTimeFormatter dtf = null;
+
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                            dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd___HH:mm:ss");
+                                            LocalDateTime now = LocalDateTime.now();
+                                            date_=dtf.format(now);
+                                        }else{
+                                            // Change this when moving to another tab
+                                        }
+
+                                        if(uid!=null) {
+
+                                            FirebaseDatabase.getInstance()
+                                                    .getReference()
+                                                    .child("Users")
+                                                    .child(uid.replace(".", "_"))
+                                                    .child("Circle_Draw")
+                                                    .child("Uploaded at : " + date_)
+                                                    .child("Accuracy Value").setValue(percent + "%").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        finishAffinity();
+                                                        System.exit(0);
+                                                    }
+                                                }
+                                            });
+
+
+                                        }else{
+                                            Toast.makeText(getApplicationContext(),"Unable to upload data since app is opened seperately.",Toast.LENGTH_SHORT).show();
+                                        }
+
+
+
                                     }
                                 });
 
@@ -65,7 +110,7 @@ public class ScoreActivity extends AppCompatActivity {
                                 CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                    finish();
+
                                     }
                                 });
 
