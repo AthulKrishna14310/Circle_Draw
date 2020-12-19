@@ -2,8 +2,8 @@ package com.example.circle_draw;
 
 import android.content.DialogInterface;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +25,7 @@ public class ScoreActivity extends AppCompatActivity {
     private boolean success=false;
     private String uid;
     float percent;
+    UploadDialogue uploadDialogue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +48,14 @@ public class ScoreActivity extends AppCompatActivity {
 
         }
         uid=getIntent().getStringExtra("UID");
+
+
     }
         private void showfinalDialogue(boolean success) {
             // Create Alert using Builder
                if(success){
-                CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
+
+                   CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
                         .setDialogStyle(CFAlertDialog.CFAlertStyle.NOTIFICATION)
                         .setTitle("Success. Congrats you hit the score.")
                         .setIcon(R.drawable.ic_check_circle_black_24dp)
@@ -59,6 +63,7 @@ public class ScoreActivity extends AppCompatActivity {
                                 CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+
                                         String date_ = "No date";
                                         DateTimeFormatter dtf = null;
 
@@ -71,8 +76,10 @@ public class ScoreActivity extends AppCompatActivity {
                                         }
 
                                         if(uid!=null) {
+                                            uploadDialogue= new UploadDialogue(ScoreActivity.this,getApplicationContext(),"" +
+                                                    "Uploading data please wait...");
 
-                                            FirebaseDatabase.getInstance()
+                                              FirebaseDatabase.getInstance()
                                                     .getReference()
                                                     .child("Users")
                                                     .child(uid.replace(".", "_"))
@@ -82,15 +89,16 @@ public class ScoreActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
+                                                        uploadDialogue.hide();
                                                         finishAffinity();
-                                                        System.exit(0);
+
                                                     }
                                                 }
                                             });
 
 
                                         }else{
-                                            Toast.makeText(getApplicationContext(),"Unable to upload data since app is opened seperately.",Toast.LENGTH_SHORT).show();
+                                             Toast.makeText(getApplicationContext(),"Unable to upload data since app is opened seperately.",Toast.LENGTH_SHORT).show();
                                         }
 
 
@@ -110,7 +118,8 @@ public class ScoreActivity extends AppCompatActivity {
                                 CFAlertDialog.CFAlertActionAlignment.END, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        dialog.dismiss();
+                                        finish();
                                     }
                                 });
 

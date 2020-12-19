@@ -3,27 +3,47 @@ package com.example.circle_draw;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
-public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageView {
+public class CircleDrawLayout extends androidx.appcompat.widget.AppCompatImageView {
 
     public  ViewGroup.LayoutParams params;
     private Path path=new Path();
     private Paint brush=new Paint();
     private Bitmap bitmap;
+
+    public Path getPath() {
+        return path;
+    }
+
+    public Paint getBrush() {
+        return brush;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
     private int touched=0;
-    private int total=0;
+    public int total=0;
     private boolean outIndex=false;
     private ArrayList<Integer> pixelX=new ArrayList<>();
     private ArrayList<Integer> pixelY=new ArrayList<>();
+
+    public ArrayList<Float> totalPixelX=new ArrayList<>();
+    public ArrayList<Float> totalPixelY=new ArrayList<>();
     private int X,Y;
     private ArrayList<Integer> taps=new ArrayList<>();
     public ArrayList<Integer> getPixelX() {
@@ -31,7 +51,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
     }
 
     public int lastr,lastg,lastb;
-
+    private Context context;
 
     public void setPixelX(ArrayList<Integer> pixelX) {
         this.pixelX = pixelX;
@@ -65,7 +85,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
-
+        this.context=context;
     }
 
     public CircleDrawLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -79,7 +99,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
         this.setBackground(context.getDrawable(R.drawable.draw_bg));
         this.setDrawingCacheEnabled(true);
         this.buildDrawingCache(true);
-
+        this.context=context;
     }
 
     public CircleDrawLayout(Context context, AttributeSet attrs) {
@@ -93,7 +113,7 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
         this.setBackground(context.getDrawable(R.drawable.draw_bg));
         this.setDrawingCacheEnabled(true);
         this.buildDrawingCache(true);
-
+        this.context=context;
     }
 
     public ArrayList<Integer> getTaps() {
@@ -108,10 +128,12 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
     public boolean onTouchEvent(MotionEvent event) {
         float pointX=event.getX();
         float pointY=event.getY();
-
+        totalPixelX.add(pointX);
+        totalPixelY.add(pointY);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(pointX,pointY);
+
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -172,11 +194,27 @@ public class CircleDrawLayout extends android.support.v7.widget.AppCompatImageVi
         this.outIndex = outIndex;
     }
 
+    public void clear(){
+        path=new Path();
+        brush=new Paint();
+        brush.setAntiAlias(true);
+        brush.setColor(Color.GREEN);
+        brush.setStyle(Paint.Style.STROKE);
+        brush.setStrokeJoin(Paint.Join.ROUND);
+        brush.setStrokeWidth(15f);
+
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
           canvas.drawPath(path,brush);
-         }
+    }
+
+    @Override
+    public void setBackground(Drawable background) {
+        super.setBackground(background);
+
+    }
 
     public int getTouched() {
         return touched;
